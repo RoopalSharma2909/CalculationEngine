@@ -1,0 +1,7 @@
+TEAM_ID=
+
+PRODUCT_NAME=CalculationEngine
+PRODUCT_BUNDLE_IDENTIFIER=com.cravrr.calculationengine.CalculationEngine$(TEAM_ID)
+
+CURRENT_PROJECT_VERSION=1
+MARKETING_VERSION=1.0
