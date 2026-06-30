@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -15,32 +16,13 @@ import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.round
 
-object OrderCalculationService {
+const val CARD_SURCHARGE = "Card Surcharge"
+const val CASH_DISCOUNT = "Cash Discount"
 
-    val coroutineScope =
-        CoroutineScope(
-            SupervisorJob() + Dispatchers.Default + CoroutineExceptionHandler { _, exception ->
-                println("CalculationService Exception ${exception.message}")
-            }
-        )
-
+internal class OrderCalculationService() {
     private val itemPriceCalculator = ItemPriceCalculator()
-    private var _updateUI = MutableStateFlow(0)
-    val updateUI = _updateUI.asStateFlow()
 
-    fun updateUIState() {
-        coroutineScope.launch {
-            _updateUI.value += 1
-        }
-    }
-
-    fun setUpdateUI(value: Int) {
-        coroutineScope.launch {
-            _updateUI.emit(value)
-        }
-    }
-
-    private fun calculateTotalPriceOfSelectedCombos(combos: ArrayList<ItemDetailsList>?): Double {
+    private fun calculateTotalPriceOfSelectedCombos(combos: MutableList<ItemDetailsList>?): Double {
         return combos?.sumOf { comboItem ->
             (
                     comboItem.selectedAddonsItems?.sumOf { it.price * it.qty }
@@ -49,72 +31,70 @@ object OrderCalculationService {
         } ?: 0.0
     }
 
-    suspend fun calculateOrderTotals(
+    fun calculateOrderTotals(
         order: OrderPlaceRequest,
         isTaxIncluded: Boolean,
     ) {
-        coroutineScope.async {
-            order.totalNetSale = 0.0
-            order.totalItemTax = 0.0
-            order.subTotal = 0.0
-            order.subTotalExcludeMembership = 0.0
-            order.totalGrossSale = 0.0
-            order.taxableAmount = 0.0
+        order.totalNetSale = 0.0
+        order.totalItemTax = 0.0
+        order.subTotal = 0.0
+        order.subTotalExcludeMembership = 0.0
+        order.totalGrossSale = 0.0
+        order.taxableAmount = 0.0
 
-            var totalAmountForDiscount = 0.0
+        var totalAmountForDiscount = 0.0
 
-            order.itemDetails.forEach { item ->
-                if (
-                    item.isMembership != true && item.isVoid != true && item.isVoid != true && item.isRefund != true
-                ) {
-                    val comboPrice =
-                        calculateTotalPriceOfSelectedCombos(item.selectedCombo)
+        order.itemDetails.forEach { item ->
+            if (
+                item.isMembership != true && item.isVoid != true && item.isVoid != true && item.isRefund != true
+            ) {
+                val comboPrice =
+                    calculateTotalPriceOfSelectedCombos(item.selectedCombo)
 
-                    val totalTaxPercent =
-                        item.taxList?.sumOf { tax -> tax.taxPct ?: 0.0 } ?: 0.0
+                val totalTaxPercent =
+                    item.taxList?.sumOf { tax -> tax.taxPct ?: 0.0 } ?: 0.0
 
-                    val unitPrice =
-                        item.regularSalesUnitPrice + comboPrice
+                val unitPrice =
+                    item.regularSalesUnitPrice + comboPrice
 
-                    val grossSales =
-                        if (isTaxIncluded) {
-                            ((unitPrice * item.quantity) * 100.0) /
-                                    (100.0 + totalTaxPercent)
-                        } else {
-                            unitPrice * item.quantity
-                        }
-
-                    totalAmountForDiscount += grossSales
-                }
-            }
-
-            order.itemDetails = order.itemDetails
-                .mapIndexed { index, item ->
-                    item.copy().also { itemCopy ->
-                        if (item.isVoid != true && item.isVoid != true && item.isRefund != true) {
-                            calculateItemPrice(
-                                order,
-                                index,
-                                itemCopy,
-                                totalAmountForDiscount,
-                                isTaxIncluded
-                            )
-                        }
-
+                val grossSales =
+                    if (isTaxIncluded) {
+                        ((unitPrice * item.quantity) * 100.0) /
+                                (100.0 + totalTaxPercent)
+                    } else {
+                        unitPrice * item.quantity
                     }
+
+                totalAmountForDiscount += grossSales
+            }
+        }
+
+        order.itemDetails = order.itemDetails
+            .mapIndexed { index, item ->
+                item.copy().also { itemCopy ->
+                    if (item.isVoid != true && item.is_void != true && item.isRefund != true) {
+                        calculateItemPrice(
+                            order,
+                            index,
+                            itemCopy,
+                            totalAmountForDiscount,
+                            isTaxIncluded
+                        )
+                    }
+
                 }
-                .toCollection(ArrayList())
-
-            order.paymentDetails?.forEach {
-                order.changeTender = it.change
             }
+            .toCollection(ArrayList())
 
-            order.totalItemTax = formatDoublePrice(order.totalItemTax)
-            order.totalNetSale = formatDoublePrice(order.totalNetSale)
-            if (order.isTaxExempt) {
-                order.totalItemTax = 0.00
-            }
-        }.await()
+        order.paymentDetails?.forEach {
+            order.changeTender = it.change
+        }
+
+        order.totalItemTax = formatDoublePrice(order.totalItemTax)
+        order.totalNetSale = formatDoublePrice(order.totalNetSale)
+        if (order.isTaxExempt) {
+            order.totalItemTax = 0.00
+        }
     }
 
     private fun calculateItemPrice(
@@ -130,9 +110,9 @@ object OrderCalculationService {
                 val calculatedItemIndex = index + addonIndex + 1
                 if (order.itemDetails.size > calculatedItemIndex) {
                     val calculatedItem = order.itemDetails[calculatedItemIndex]
-                    calculatedItem.calculatePrice(
+                    itemPriceCalculator.calculateItemPrice(
                         order,
-                        itemPriceCalculator,
+                        calculatedItem,
                         totalAmount,
                         isTaxIncluded = isTaxIncluded
                     )
@@ -142,9 +122,9 @@ object OrderCalculationService {
                 }
             }
 
-            item.calculatePrice(
+            itemPriceCalculator.calculateItemPrice(
                 order,
-                itemPriceCalculator,
+                item,
                 totalAmount,
                 isTaxIncluded = isTaxIncluded
             )
@@ -162,10 +142,7 @@ object OrderCalculationService {
         return item
     }
 
-    const val CARD_SURCHARGE = "Card Surcharge"
-    const val CASH_DISCOUNT = "Cash Discount"
-
-    suspend fun applyDiscountsAndCharges(
+    fun applyDiscountsAndCharges(
         roundOff: Boolean,
         type: String,
         paymentTypes: List<String>,
@@ -421,7 +398,7 @@ object OrderCalculationService {
 
     private fun calculateOrderTypeChargesAndTax(
         order: OrderPlaceRequest,
-        charge: ArrayList<ChargesData>,
+        charge: MutableList<ChargesData>,
         isTaxIncluded: Boolean,
     ): Double {
 
@@ -470,7 +447,7 @@ object OrderCalculationService {
             if (applicableCharge.valueType.equals("Absolute", true)) {
 
                 val totalTaxPercent =
-                    applicableCharge.chargeTaxIds?.sumOf { (it.taxPct ?: 0.0)} ?: 0.0
+                    applicableCharge.chargeTaxIds?.sumOf { (it.taxPct ?: 0.0) } ?: 0.0
 
                 if (isTaxIncluded) {
                     (applicableCharge.value ?: 0.0) / (1 + totalTaxPercent / 100)

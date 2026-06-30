@@ -8,5 +8,6 @@ fun roundHalfUp(value: Double, scale: Int): Double {
     return floor(value * factor + 0.5) / factor
 }
 
+
 fun formatDoublePrice(input: Double): Double =
     roundHalfUp(input, 2)

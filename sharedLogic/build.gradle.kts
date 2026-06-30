@@ -9,7 +9,7 @@ plugins {
 
 
 group = "com.cyntra"
-version = "1.0.0"
+version = "1.0.2"
 
 kotlin {
     listOf(
@@ -24,9 +24,8 @@ kotlin {
     }
 
     jvm("desktop")
-    
-    js {
-        outputModuleName = "sharedLogic"
+
+    js() {
         browser()
         binaries.library()
         generateTypeScriptDefinitions()
@@ -60,9 +59,9 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
-        jsMain.dependencies {
-            implementation(libs.wrappers.browser)
-        }
+//        jsMain.dependencies {
+//            implementation(libs.wrappers.browser)
+//        }
         androidMain.dependencies {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
@@ -76,24 +75,20 @@ kotlin {
 }
 
 publishing {
+    publications.withType<MavenPublication>().configureEach {
+        artifactId = artifactId.lowercase()
+    }
 
     repositories {
         maven {
             name = "GitHubPackages"
-
             url = uri("https://maven.pkg.github.com/RoopalSharma2909/CalculationEngine")
-
             credentials {
                 username = project.findProperty("gpr.user") as String?
                     ?: System.getenv("GITHUB_USERNAME")
-
                 password = project.findProperty("gpr.key") as String?
                     ?: System.getenv("GITHUB_TOKEN")
             }
         }
-    }
-
-    publications.withType<MavenPublication>().configureEach {
-        artifactId = "calculation-engine"
     }
 }
