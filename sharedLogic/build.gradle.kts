@@ -25,12 +25,14 @@ kotlin {
 
     jvm("desktop")
 
-    js() {
+    js(IR) {
+        nodejs()
         browser()
         binaries.library()
         generateTypeScriptDefinitions()
         compilerOptions {
             target = "es2015"
+            freeCompilerArgs.add("-Xir-module-kind=commonjs")
             optIn.add("kotlin.js.ExperimentalJsExport")
         }
     }

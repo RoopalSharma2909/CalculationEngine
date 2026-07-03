@@ -1,0 +1,37 @@
+name: Publish sharedLogic to GitHub Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Build Kotlin/JS production library
+        run: ./gradlew :sharedLogic:jsNodeProductionLibraryDistribution --no-daemon
+
+      - name: Publish to GitHub Packages (npm)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd sharedLogic/npm-package
+          # ensure npm uses GitHub Packages auth for the scope
+          npm config set //npm.pkg.github.com/:_authToken "${NODE_AUTH_TOKEN}"
+          npm publish --registry=https://npm.pkg.github.com/
