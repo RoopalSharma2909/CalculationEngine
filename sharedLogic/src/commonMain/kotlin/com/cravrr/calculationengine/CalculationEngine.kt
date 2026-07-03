@@ -15,4 +15,7 @@ interface CalculationEngine {
         isTaxIncluded: Boolean = false,
     ): String
 
+    companion object {
+        fun create(): CalculationEngine = CalculationEngineImpl()
+    }
 }

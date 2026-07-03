@@ -9,7 +9,7 @@ plugins {
 
 
 group = "com.cyntra"
-version = "1.0.2"
+version = "1.0.8"
 
 kotlin {
     listOf(
@@ -23,9 +23,13 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm("desktop") {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
 
-    js() {
+    js {
         browser()
         binaries.library()
         generateTypeScriptDefinitions()
@@ -33,6 +37,13 @@ kotlin {
             target = "es2015"
             optIn.add("kotlin.js.ExperimentalJsExport")
         }
+        nodejs()
+    }
+
+    wasmJs {
+        browser()
+        binaries.library()
+        generateTypeScriptDefinitions()
     }
     
     androidLibrary {

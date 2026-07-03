@@ -11,6 +11,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.collections.plusAssign
 import kotlin.math.absoluteValue
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -90,11 +91,7 @@ internal class OrderCalculationService() {
             order.changeTender = it.change
         }
 
-        order.totalItemTax = formatDoublePrice(order.totalItemTax)
         order.totalNetSale = formatDoublePrice(order.totalNetSale)
-        if (order.isTaxExempt) {
-            order.totalItemTax = 0.00
-        }
     }
 
     private fun calculateItemPrice(
@@ -135,7 +132,6 @@ internal class OrderCalculationService() {
             }
             order.taxableAmount = order.taxableAmount?.plus(item.taxableAmount ?: 0.0)
             order.totalNetSale += item.totalNetSale
-            order.totalItemTax += item.totalItemTax
             order.totalGrossSale += item.totalGrossSale
             order.totalDiscount += (item.totalDiscount + item.totalOrderDiscount)
         }
@@ -214,15 +210,82 @@ internal class OrderCalculationService() {
             }
         }
 
-        val chargesTax =
-            calculateOrderTypeChargesAndTax(
-                order,
-                order.charges,
-                isTaxIncluded
-            )
+        calculateOrderTypeChargesAndTax(
+            order,
+            order.charges,
+            isTaxIncluded
+        )
 
         order.totalCharges = order.charges.sumOf { it.value }
-        order.totalItemTax += chargesTax
+
+        var totalTax = 0.0
+        val taxList = ArrayList<Tax>()
+
+        order.itemDetails.forEach { item ->
+            item.taxList?.forEach { tax ->
+                if (taxList.none { it.taxDsc == tax.taxDsc }) {
+                    taxList.add(tax.copy())
+                }
+            }
+        }
+
+        order.charges.forEach {
+            it.chargeTaxIds?.forEach { chargeTax ->
+                if (taxList.none { it.taxDsc == chargeTax.taxDsc }) {
+                    taxList.add(
+                        Tax(
+                            id = chargeTax.id,
+                            taxId = chargeTax.id,
+                            taxDsc = chargeTax.taxDsc,
+                            taxType = chargeTax.taxType,
+                            taxPct = chargeTax.taxPct,
+                            storeId = "",
+                            taxAmount = 0.0,
+                            taxableAmount = 0.0
+                        )
+                    )
+                }
+            }
+        }
+
+        val itemListFilter =
+            order.itemDetails.filter { it.mainItemID.isNullOrEmpty() && it.isRefund != true && it.isVoid != true }
+
+        taxList.forEach { orderTax ->
+            var itemTaxAmount = 0.0
+            var taxableAmt = 0.0
+
+            itemListFilter.forEach { items ->
+                if (!items.taxList.isNullOrEmpty()) {
+                    items.taxList?.forEach { itemTax ->
+                        if (itemTax.taxDsc == orderTax.taxDsc) {
+                            itemTaxAmount += (itemTax.taxAmount ?: 0.0)
+                            taxableAmt += (itemTax.taxableAmount ?: 0.0)
+                        }
+                    }
+                }
+            }
+
+            order.charges.forEach {
+                if (!it.chargeTaxIds.isNullOrEmpty()) {
+                    it.chargeTaxIds.forEach { itemTax ->
+                        if (itemTax.taxDsc == orderTax.taxDsc) {
+                            itemTaxAmount += (itemTax.taxAmount ?: 0.0)
+                            taxableAmt += it.value
+                        }
+                    }
+                }
+            }
+
+            orderTax.taxableAmount = taxableAmt
+            orderTax.taxAmount = if (order.isTaxExempt) 0.0 else formatDoublePrice(
+                itemTaxAmount
+            )
+            totalTax += (orderTax.taxAmount ?: 0.0)
+        }
+
+        order.taxes = taxList
+        order.totalItemTax = totalTax
 
         val payableAmount =
             order.totalNetSale + order.totalItemTax + order.tipAmount + order.totalCharges

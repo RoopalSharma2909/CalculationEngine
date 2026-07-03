@@ -8,12 +8,11 @@ import kotlinx.serialization.Transient
 
 @Serializable
 internal data class OrderPlaceRequest(
-    var isReprint: Boolean? = null,
+    var isReprint: Boolean = false,
     var itemSelected: Boolean = false,
-    var isAdjusting: Boolean? = null,
-    var isRefund: Boolean? = null,
-    @Transient
-    var fromScreen: String? = "",
+    var isAdjusting: Boolean = false,
+    var isRefund: Boolean = false,
+    var fromScreen: String? = null,
     @SerialName("_id")
     var id: String? = null,
     @SerialName("invoice_no")
@@ -29,17 +28,17 @@ internal data class OrderPlaceRequest(
     @SerialName("is_kot_printed")
     var kotPrinted: Boolean? = null,
     @SerialName("is_receipt_printed")
-    var isReceiptPrinted: Boolean? = null,
+    var isReceiptPrinted: Boolean = false,
     @SerialName("is_sync")
-    var isSync: Boolean? = null,
+    var isSync: Boolean = false,
     @SerialName("offline_invoice_no")
     var offlineInvoiceNo: String? = null,
     @SerialName("order_no")
     var orderNo: String? = null,
     @SerialName("store_details")
-    var orderStoreDetails: OrderStoreDetails? = null,
+    var orderStoreDetails: OrderStoreDetails = OrderStoreDetails(),
     @SerialName("customer_details")
-    var customerDetails: List<CustomerDetails>? = null,
+    var customerDetails: List<CustomerDetails> = ArrayList(),
     @SerialName("item_details")
     var itemDetails: ArrayList<ItemDetailsList> = ArrayList(),
     @SerialName("payment_details")
@@ -47,7 +46,7 @@ internal data class OrderPlaceRequest(
     @SerialName("change_tender")
     var changeTender: Double = 0.0,
     @SerialName("comment")
-    var comment: String? = "",
+    var comment: String? = null,
     @SerialName("is_void")
     var isVoid: Boolean = false,
     @SerialName("order_status")
@@ -89,9 +88,9 @@ internal data class OrderPlaceRequest(
     @SerialName("payment_ids")
     var paidTransactions: ArrayList<OrderPaymentDetails> = ArrayList(),
     @SerialName("order_type")
-    var orderType: String? = "",
+    var orderType: String? = null,
     @SerialName("order_code")
-    var orderTypeCode: String? = "",
+    var orderTypeCode: String? = null,
     @SerialName("is_tax_exempt")
     var isTaxExempt: Boolean = false,
     @SerialName("split_bill_type")
@@ -102,7 +101,7 @@ internal data class OrderPlaceRequest(
     var subTotal: Double = 0.0,
     @Transient
     @SerialName("sub_total_exclude_membership")
-    var subTotalExcludeMembership: Double? = 0.0,
+    var subTotalExcludeMembership: Double? = null,
     @SerialName("total_charges")
     var totalCharges: Double = 0.0,
     @SerialName("initial_paid")
@@ -118,12 +117,12 @@ internal data class OrderPlaceRequest(
     var platformDetails: PlatForDetails? = null,
     var orderTimeMillis: Long = 0L,
     @SerialName("order_state_history")
-    var orderStateHistory: List<OrderStateHistory>? = emptyList(),
+    var orderStateHistory: List<OrderStateHistory>? = null,
     var selectedOrderType: OrderTypeData? = null,
     @SerialName("membership_plan")
     var membershipPlan: MemberShipPlan? = null,
     @SerialName("is_advance_order")
-    var isAdvanceOrder: Boolean? = null,
+    var isAdvanceOrder: Boolean = false,
     @SerialName("order_scheduled")
     var orderScheduled: OrderScheduled? = null,
     @SerialName("loyalty")
