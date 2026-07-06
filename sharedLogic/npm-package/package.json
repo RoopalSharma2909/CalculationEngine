@@ -1,0 +1,14 @@
+{
+  "name": "@cyntra/calculation-engine",
+  "version": "1.0.2",
+  "description": "CalculationEngine Kotlin Multiplatform JS package",
+  "type": "module",
+  "main": "kotlin/CalculationEngine-sharedLogic.mjs",
+  "types": "kotlin/CalculationEngine-sharedLogic.d.ts",
+  "license": "MIT",
+  "keywords": ["kotlin","calculation","calculation-engine","cyntra"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your/repo.git"
+  }
+}
