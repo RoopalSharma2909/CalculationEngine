@@ -73,7 +73,7 @@ internal class OrderCalculationService() {
         order.itemDetails = order.itemDetails
             .mapIndexed { index, item ->
                 item.copy().also { itemCopy ->
-                    if (item.isVoid != true && item.is_void != true && item.isRefund != true) {
+                    if (item.isVoid != true && item.isRefund != true) {
                         calculateItemPrice(
                             order,
                             index,

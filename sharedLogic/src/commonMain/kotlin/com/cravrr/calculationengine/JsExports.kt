@@ -1,6 +1,8 @@
 @file:OptIn(kotlin.js.ExperimentalJsExport::class)
 package com.cravrr.calculationengine
 
+import kotlin.js.JsExport
+
 @JsExport
 fun refreshCalculationJs(
     orderJson: String,
@@ -10,7 +12,7 @@ fun refreshCalculationJs(
     selectedPaymentType: String = "",
     isRoundOffEnabled: Boolean = false,
     roundOffType: String = "",
-    applicableRoundOffPaymentTypes: Array<String> = emptyArray(),
+    applicableRoundOffPaymentTypes: ArrayList<String> = ArrayList(),
     isRefundingOrder: Boolean = false,
     isTaxIncluded: Boolean = false,
 ): String {

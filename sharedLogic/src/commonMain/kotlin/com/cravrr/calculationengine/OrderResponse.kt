@@ -8,131 +8,208 @@ import kotlinx.serialization.Transient
 
 @Serializable
 internal data class OrderPlaceRequest(
+
+    @SerialName("isReprint")
     var isReprint: Boolean = false,
-    var itemSelected: Boolean = false,
+
+    @SerialName("isAdjusting")
     var isAdjusting: Boolean = false,
+
+    @SerialName("isRefund")
     var isRefund: Boolean = false,
-    var fromScreen: String? = null,
+
+    @SerialName("fromScreen")
+    var fromScreen: String? = "",
+
     @SerialName("_id")
     var id: String? = null,
+
+    @SerialName("payment_code")
+    var paymentCode: String? = null,
+
+    @SerialName("type")
+    var type: String? = null,
+
     @SerialName("invoice_no")
     var invoiceNo: Int? = null,
+
     @SerialName("invoice_bos_number")
     var invoiceBosNumber: String? = null,
+
     @SerialName("order_state")
     var orderState: String = "",
+
     @SerialName("order_source_code")
     var orderSourceCode: String? = null,
+
     @SerialName("order_source")
     var orderSource: String? = null,
+
     @SerialName("is_kot_printed")
     var kotPrinted: Boolean? = null,
+
     @SerialName("is_receipt_printed")
     var isReceiptPrinted: Boolean = false,
+
     @SerialName("is_sync")
     var isSync: Boolean = false,
+
     @SerialName("offline_invoice_no")
-    var offlineInvoiceNo: String? = null,
+    var offlineInvoiceNo: String = "",
+
     @SerialName("order_no")
-    var orderNo: String? = null,
+    var orderNo: String = "",
+
     @SerialName("store_details")
     var orderStoreDetails: OrderStoreDetails = OrderStoreDetails(),
+
     @SerialName("customer_details")
     var customerDetails: List<CustomerDetails> = ArrayList(),
+
     @SerialName("item_details")
     var itemDetails: ArrayList<ItemDetailsList> = ArrayList(),
+
     @SerialName("payment_details")
     var paymentDetails: ArrayList<PaymentDetails>? = null,
+
     @SerialName("change_tender")
     var changeTender: Double = 0.0,
+
     @SerialName("comment")
-    var comment: String? = null,
+    var comment: String? = "",
+
     @SerialName("is_void")
     var isVoid: Boolean = false,
+
+    @SerialName("is_send")
+    var isSend: Boolean = false,
+
     @SerialName("order_status")
     var orderStatus: String = "",
+
     @SerialName("calender_date")
     var calenderDate: String = "",
+
     @SerialName("date_time")
     var dateTime: String = "",
+
     @SerialName("business_date")
     var businessDate: String = "",
+
     @SerialName("total_discount")
     var totalDiscount: Double = 0.0,
+
     @SerialName("total_item_tax")
     var totalItemTax: Double = 0.0,
+
     @SerialName("total_net_sale")
     var totalNetSale: Double = 0.0,
+
     @SerialName("total_gross_sale")
     var totalGrossSale: Double = 0.0,
+
     @SerialName("transaction_grand_amount")
     var transactionGrandAmount: Double = 0.0,
+
     @SerialName("round_off_amount")
     var roundOffAmount: Double = 0.0,
+
     @SerialName("refund_amount")
     var refundAmount: Double = 0.0,
+
     @SerialName("discount_percent")
     var discountPercentage: Double = 0.0,
+
     @SerialName("discount_amount")
     var discountAmount: Double = 0.0,
+
+    @SerialName("state")
     var state: String = "",
+
     @SerialName("tip_amount")
     var tipAmount: Double = 0.0,
+
     @SerialName("tip_percentage")
     var tipPercentage: Double = 0.0,
+
     @SerialName("split_bill_type_count")
     var splitBillTypeCount: Int = 1,
+
     @SerialName("payment_payee_details")
     var splitTransactions: ArrayList<OrderPaymentDetails> = ArrayList(),
-    @Transient
+
     @SerialName("payment_ids")
     var paidTransactions: ArrayList<OrderPaymentDetails> = ArrayList(),
+
     @SerialName("order_type")
-    var orderType: String? = null,
+    var orderType: String? = "",
+
     @SerialName("order_code")
-    var orderTypeCode: String? = null,
+    var orderTypeCode: String? = "",
+
     @SerialName("is_tax_exempt")
     var isTaxExempt: Boolean = false,
+
     @SerialName("split_bill_type")
     var splitBillType: Int = 1,
+
     @SerialName("receipt_print_count")
     var receiptPrintCount: Int? = 0,
+
     @SerialName("sub_total")
     var subTotal: Double = 0.0,
+
     @Transient
     @SerialName("sub_total_exclude_membership")
     var subTotalExcludeMembership: Double? = null,
+
     @SerialName("total_charges")
     var totalCharges: Double = 0.0,
+
     @SerialName("initial_paid")
     var initialPaid: Double = 0.0,
+
     @SerialName("applied_discount")
     var appliedDiscount: ArrayList<ChargesData> = ArrayList(),
+
     @SerialName("charges")
     var charges: ArrayList<ChargesData> = ArrayList(),
+
     var currentPayeeIndex: Int = -1,
+
     @SerialName("updated_at")
     var updateAt: String? = "",
+
     @SerialName("platform_details")
     var platformDetails: PlatForDetails? = null,
+
+    @SerialName("order_time_millis")
     var orderTimeMillis: Long = 0L,
+
     @SerialName("order_state_history")
     var orderStateHistory: List<OrderStateHistory>? = null,
+
+    @SerialName("selected_order_type")
     var selectedOrderType: OrderTypeData? = null,
+
     @SerialName("membership_plan")
     var membershipPlan: MemberShipPlan? = null,
+
     @SerialName("is_advance_order")
     var isAdvanceOrder: Boolean = false,
+
     @SerialName("order_scheduled")
     var orderScheduled: OrderScheduled? = null,
+
     @SerialName("loyalty")
     var loyalty: LoyaltyData? = null,
+
     @SerialName("taxes")
     var taxes: List<Tax>? = null,
+
     @SerialName("taxable_amount")
     var taxableAmount: Double? = null,
-
-    )
+)
 
 @Serializable
 internal data class OrderScheduled(
@@ -153,7 +230,7 @@ internal data class OrderTypeData(
     @SerialName("stendat") val stendat: String? = null,
     @SerialName("store_id") val storeId: String? = null,
     @SerialName("updated_at") val updatedAt: String? = null,
-    var charges: List<OrderLevelChargesData>? = null,
+    @SerialName("charges") var charges: List<OrderLevelChargesData>? = null,
     var selected: Boolean = false
 )
 
@@ -323,6 +400,7 @@ internal data class MemberShipPlan(
     @Transient
     var isSelected: Boolean = false
 )
+
 @Serializable
 internal data class OfferDetail(
     @SerialName("max_consuption") val maxConsumption: Int? = null,
@@ -338,19 +416,19 @@ internal data class RedemptionDetails(
 
 @Serializable
 internal data class OrderDiscount(
-    @SerialName("entity") val entity: String ?= null,
+    @SerialName("entity") val entity: String? = null,
     @SerialName("is_source_item") val isSourceItem: Boolean? = true,
     @SerialName("mapped_offer_items") var mappedOfferItems: List<Int>? = null,
     @SerialName("offer_id") val offerId: String,
-    @SerialName("offer_header") val offerHeader: OrderOfferHeader ?= null
+    @SerialName("offer_header") val offerHeader: OrderOfferHeader? = null
 )
 
 @Serializable
 data class OrderOfferHeader(
-    @SerialName("deal_type") val dealType: String ?= null,
-    @SerialName("description") val description: String ?= null,
-    @SerialName("offer_header_id") val offerHeaderId: String ?= null,
-    @SerialName("terms_conditions") val termsConditions: String ?= null,
+    @SerialName("deal_type") val dealType: String? = null,
+    @SerialName("description") val description: String? = null,
+    @SerialName("offer_header_id") val offerHeaderId: String? = null,
+    @SerialName("terms_conditions") val termsConditions: String? = null,
     @SerialName("coupon_code") val couponCode: String? = null
 )
 
@@ -522,7 +600,6 @@ internal data class OrderPaymentDetails(
         return result
     }
 }
-
 
 
 @Serializable
