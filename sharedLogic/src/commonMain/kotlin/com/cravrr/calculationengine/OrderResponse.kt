@@ -19,7 +19,7 @@ internal data class OrderPlaceRequest(
     var isRefund: Boolean = false,
 
     @SerialName("fromScreen")
-    var fromScreen: String? = "",
+    var fromScreen: String? = null,
 
     @SerialName("_id")
     var id: String? = null,
@@ -48,11 +48,8 @@ internal data class OrderPlaceRequest(
     @SerialName("is_kot_printed")
     var kotPrinted: Boolean? = null,
 
-    @SerialName("is_receipt_printed")
-    var isReceiptPrinted: Boolean = false,
-
     @SerialName("is_sync")
-    var isSync: Boolean = false,
+    var isSync: Boolean? = null,
 
     @SerialName("offline_invoice_no")
     var offlineInvoiceNo: String = "",
@@ -136,16 +133,16 @@ internal data class OrderPlaceRequest(
     var splitBillTypeCount: Int = 1,
 
     @SerialName("payment_payee_details")
-    var splitTransactions: ArrayList<OrderPaymentDetails> = ArrayList(),
+    var splitTransactions: ArrayList<OrderPaymentDetails>? = null,
 
     @SerialName("payment_ids")
-    var paidTransactions: ArrayList<OrderPaymentDetails> = ArrayList(),
+    var paidTransactions: ArrayList<OrderPaymentDetails>? = null,
 
     @SerialName("order_type")
-    var orderType: String? = "",
+    var orderType: String? = null,
 
     @SerialName("order_code")
-    var orderTypeCode: String? = "",
+    var orderTypeCode: String? = null,
 
     @SerialName("is_tax_exempt")
     var isTaxExempt: Boolean = false,
@@ -184,7 +181,7 @@ internal data class OrderPlaceRequest(
     var platformDetails: PlatForDetails? = null,
 
     @SerialName("order_time_millis")
-    var orderTimeMillis: Long = 0L,
+    var orderTimeMillis: Long? = null,
 
     @SerialName("order_state_history")
     var orderStateHistory: List<OrderStateHistory>? = null,
@@ -196,7 +193,7 @@ internal data class OrderPlaceRequest(
     var membershipPlan: MemberShipPlan? = null,
 
     @SerialName("is_advance_order")
-    var isAdvanceOrder: Boolean = false,
+    var isAdvanceOrder: Boolean? = null,
 
     @SerialName("order_scheduled")
     var orderScheduled: OrderScheduled? = null,
@@ -219,15 +216,10 @@ internal data class OrderScheduled(
 
 @Serializable
 internal data class OrderTypeData(
-    @SerialName("action") val action: String? = null,
-    @SerialName("created_at") val createdAt: String? = null,
-    @SerialName("_id") val id: String? = "",
+    @SerialName("_id") val id: String? = null,
     @SerialName("order_code") val orderCode: String? = null,
-    @SerialName("order_des") val orderDes: String? = null,
     @SerialName("order_type") val orderType: String? = null,
-    @SerialName("status") val status: Boolean? = false,
-    @SerialName("stdat") val stdat: String? = null,
-    @SerialName("stendat") val stendat: String? = null,
+    @SerialName("status") val status: Boolean? = null,
     @SerialName("store_id") val storeId: String? = null,
     @SerialName("updated_at") val updatedAt: String? = null,
     @SerialName("charges") var charges: List<OrderLevelChargesData>? = null,
@@ -279,7 +271,6 @@ internal data class OrderStoreDetails(
     @SerialName("gst_no") var gstNumber: String? = null,
     @SerialName("fssai_no") var fssaiNo: String? = null,
     @SerialName("store_tagline") var storeTagLine: String? = null,
-    @SerialName("order_des") var orderDes: String? = null,
     @SerialName("order_code") var orderCode: String? = null,
     @SerialName("integration") var integration: String? = null,
     @SerialName("referencestr") var referenceStr: String? = null,
@@ -294,10 +285,10 @@ internal data class OrderStoreDetails(
     @SerialName("store_zip") var storeZip: String = "",
     @SerialName("store_country") var storeCountry: String = "",
     @SerialName("store_contact_no") var storeContactNo: String = "",
-    @SerialName("currencycode") var currencyCode: String? = null,
-    @SerialName("emp_session_id") var empSessionId: String = "",
-    @SerialName("emp_no") var empNo: String = "",
-    @SerialName("emp_name") var empName: String = "",
+    @SerialName("currency_code") var currencyCode: String? = null,
+    @SerialName("emp_session_id") var empSessionId: String? = null,
+    @SerialName("emp_no") var empNo: String? = null,
+    @SerialName("emp_name") var empName: String? = null,
     @SerialName("emp_mobile_no") val empMobileNo: String? = null,
     @SerialName("table_no") var tableNo: String? = null,
     @SerialName("table_id") var tableId: String? = null,
@@ -305,19 +296,18 @@ internal data class OrderStoreDetails(
     @SerialName("floor_no") var floorNo: String? = null,
     @SerialName("manager_override") var managerOverride: List<String>? = null,
     @SerialName("device_id") var deviceId: String? = null,
-    @SerialName("is_child_print_active") var isChildPrintActive: Boolean? = null,
     @SerialName("terminal_id") var terminalId: String? = null,
     @SerialName("order_reference_no") var orderReferenceNo: String? = null,
     @SerialName("previous_order_no") var previousOrderNo: String? = null,
     @SerialName("previous_invoice_no") var previousInvoiceNo: String? = null,
     @SerialName("channel") var channel: String? = null,
-    @SerialName("associate_emp_no") var associateEmpNo: String = "",
-    @SerialName("associate_emp_name") var associateEmpName: String = "",
+    @SerialName("associate_emp_no") var associateEmpNo: String? = null,
+    @SerialName("associate_emp_name") var associateEmpName: String? = null,
     @SerialName("no_of_guest") var noOfGuest: Int? = null,
     @SerialName("prev_floor_id") var previousFloorId: String? = null,
     @SerialName("prev_table_id") var previousTableId: String? = null,
     @SerialName("agg_order_ref_no") var aggOrderRefNo: String? = null,
-    @SerialName("store_logo") var storeLogo: String? = ""
+    @SerialName("store_logo") var storeLogo: String? = null
 )
 
 
@@ -444,6 +434,7 @@ internal data class ChargeTaxId(
 )
 
 
+
 @Serializable
 internal data class ChargesData(
     @SerialName("apply_at_level") val applyAtLevel: String? = null,
@@ -466,44 +457,43 @@ internal data class ChargesData(
 
 @Serializable
 internal data class OrderStateHistory(
-    val _id: String = "",
-    val order_state: String,
-    val store_id: String,
-    val order_id: String,
-    val timestamp_unix: String? = "",
-    val date_time: String? = ""
+    @SerialName("_id") val id: String? = null,
+    @SerialName("order_state")  val orderState: String?= null,
+    @SerialName("store_id")  val storeId: String?= null,
+    @SerialName("order_id")  val orderId: String?= null,
+    @SerialName("timestamp_unix")  val timestampUnix: String? = null,
+    @SerialName("date_time")  val dateTime: String? = null
 )
 
 @Serializable
 internal data class PlatForDetails(
-    val kind: String = "",
-    val name: String = "",
-    val delivery_type: String = "",
-    val extras: Extras? = null,
-    val platform_store_id: String = "",
-    val id: String = ""
+    @SerialName("kind") val kind: String? = null,
+    @SerialName("name") val name: String? = null,
+    @SerialName("delivery_type") val deliveryType: String? = null,
+    @SerialName("extras") val extras: Extras? = null,
+    @SerialName("platform_store_id") val platformStoreId: String? = null,
+    @SerialName("id") val id: String? = null
 )
 
 
 @Serializable
 internal data class Extras(
-    val order_otp: String = "",
-    val deliver_asap: Boolean = false,
-    val contact_access_code: String = ""
+    @SerialName("order_otp") val orderOtp: String? = null,
+    @SerialName("deliver_asap") val deliverAsap: Boolean? = null,
+    @SerialName("contact_access_code") val contactAccessCode: String? = null
 )
 
 @Serializable
 internal data class PaymentDetails(
     @SerialName("amount") var amount: Double? = null,
-    @SerialName("amount_round") var amountRound: Double? = null,
     @SerialName("tnd_code") var tndCode: String? = null,
     @SerialName("tnd_des") var tndDes: String? = null,
     @SerialName("tnd_type") var tndType: String? = null,
     @SerialName("transaction_id") var transactionId: String? = null,
     @SerialName("payment_gateway") var paymentGateway: String? = null,
-    @SerialName("transaction_detail") var transactionDetail: ArrayList<OrderPaymentDetails> = ArrayList(),
-    @SerialName("change") var change: Double = 0.0,
-    var transType: String = ""
+    @SerialName("transaction_detail") var transactionDetail: ArrayList<OrderPaymentDetails>? = null,
+    @SerialName("change") var change: Double? = null,
+    @SerialName("trans_type") var transType: String = ""
 )
 
 @Serializable
@@ -536,23 +526,31 @@ data class Tax(
 
 @Serializable
 internal data class OrderPaymentDetails(
+    @SerialName("print_data")
     var printData: ArrayList<String>? = null,
 
-    var transactionDetail: ArrayList<OrderPaymentDetails> = ArrayList(),
+    @SerialName("transaction_detail")
+    var transactionDetail: ArrayList<OrderPaymentDetails>? = null,
 
+    @SerialName("amount")
     var amount: Double? = null,
-    var percent: Double = 0.0,
-    var payeeName: String = "",
-    var status: Boolean = false,
-    var name: String = "",
-    var paymentMethodId: Int = -1,
-    var enteredAmount: Double = 0.0,
 
-    @SerialName("paymentIntent")
+    @SerialName("percent")
+    var percent: Double? = null,
+
+    @SerialName("payee_name")
+    var payeeName: String?= null,
+
+    @SerialName("status")
+    var status: Boolean = false,
+
+    var name: String = "",
+
+    @SerialName("payment_intent")
     var paymentIntent: ArrayList<PaymentIntentClass>? = null,
 
     @SerialName("Change")
-    var change: Double = 0.0,
+    var change: Double? = null,
 
     @SerialName("tnd_code")
     var tndCode: String = "",
@@ -565,8 +563,6 @@ internal data class OrderPaymentDetails(
 
     @SerialName("payment_type")
     var paymentType: String = "",
-
-    var terminalInvoiceNo: String = "",
 
     @SerialName("paxResponse")
     var paxResponse: PaxPaymentResponse? = null,
@@ -587,7 +583,6 @@ internal data class OrderPaymentDetails(
         if (payeeName != other.payeeName) return false
         if (status != other.status) return false
         if (name != other.name) return false
-        if (paymentMethodId != other.paymentMethodId) return false
 
         return true
     }
@@ -596,7 +591,6 @@ internal data class OrderPaymentDetails(
         var result = payeeName.hashCode()
         result = 31 * result + status.hashCode()
         result = 31 * result + name.hashCode()
-        result = 31 * result + paymentMethodId
         return result
     }
 }
