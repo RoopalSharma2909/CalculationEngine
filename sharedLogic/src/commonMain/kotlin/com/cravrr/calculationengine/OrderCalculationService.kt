@@ -88,7 +88,7 @@ internal class OrderCalculationService() {
             .toCollection(ArrayList())
 
         order.paymentDetails?.forEach {
-            order.changeTender = it.change
+            order.changeTender = (it.change ?: 0.0)
         }
 
         order.totalNetSale = formatDoublePrice(order.totalNetSale)
