@@ -410,7 +410,9 @@ internal data class OrderDiscount(
     @SerialName("is_source_item") val isSourceItem: Boolean? = true,
     @SerialName("mapped_offer_items") var mappedOfferItems: List<Int>? = null,
     @SerialName("offer_id") val offerId: String,
-    @SerialName("offer_header") val offerHeader: OrderOfferHeader? = null
+    @SerialName("offer_header") val offerHeader: OrderOfferHeader? = null,
+    @SerialName("offer_type") val offerType: String? = null,
+    @SerialName("coupon_code") val couponCode: String? = null,
 )
 
 @Serializable
@@ -432,7 +434,6 @@ internal data class ChargeTaxId(
     @SerialName("tax_type") val taxType: String? = null,
     @SerialName("tax_amount") var taxAmount: Double? = null
 )
-
 
 
 @Serializable
@@ -458,11 +459,11 @@ internal data class ChargesData(
 @Serializable
 internal data class OrderStateHistory(
     @SerialName("_id") val id: String? = null,
-    @SerialName("order_state")  val orderState: String?= null,
-    @SerialName("store_id")  val storeId: String?= null,
-    @SerialName("order_id")  val orderId: String?= null,
-    @SerialName("timestamp_unix")  val timestampUnix: String? = null,
-    @SerialName("date_time")  val dateTime: String? = null
+    @SerialName("order_state") val orderState: String? = null,
+    @SerialName("store_id") val storeId: String? = null,
+    @SerialName("order_id") val orderId: String? = null,
+    @SerialName("timestamp_unix") val timestampUnix: String? = null,
+    @SerialName("date_time") val dateTime: String? = null
 )
 
 @Serializable
@@ -539,7 +540,7 @@ internal data class OrderPaymentDetails(
     var percent: Double? = null,
 
     @SerialName("payee_name")
-    var payeeName: String?= null,
+    var payeeName: String? = null,
 
     @SerialName("status")
     var status: Boolean = false,

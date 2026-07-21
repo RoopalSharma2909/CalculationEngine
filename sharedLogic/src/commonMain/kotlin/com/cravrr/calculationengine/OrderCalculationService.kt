@@ -56,7 +56,7 @@ internal class OrderCalculationService() {
                     item.taxList?.sumOf { tax -> tax.taxPct ?: 0.0 } ?: 0.0
 
                 val unitPrice =
-                    item.regularSalesUnitPrice + comboPrice
+                    item.extendedAmount + comboPrice
 
                 val grossSales =
                     if (isTaxIncluded) {
