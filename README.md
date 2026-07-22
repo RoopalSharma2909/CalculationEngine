@@ -40,3 +40,40 @@ Use the run configurations provided by the run widget in your IDE's toolbar. You
 ---
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+
+
+# Steps to create js package
+
+```
+./gradlew :sharedLogic:jsNodeProductionLibraryDistribution --no-daemon --stacktrace
+```
+
+then copy and create readme
+```
+mkdir -p sharedLogic/npm-package && cp -R "sharedLogic/build/compileSync/js/main/productionLibrary/kotlin" sharedLogic/npm-package/ && printf '%s' '{
+  "name": "@cyntra/calculation-engine",
+  "version": "1.0.2",
+  "description": "CalculationEngine Kotlin Multiplatform JS package",
+  "type": "module",
+  "main": "kotlin/CalculationEngine-sharedLogic.mjs",
+  "types": "kotlin/CalculationEngine-sharedLogic.d.ts",
+  "license": "MIT",
+  "keywords": ["kotlin","calculation","calculation-engine","cyntra"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your/repo.git"
+  }
+}
+' > sharedLogic/npm-package/package.json && printf '%s' '# Calculation Engine (JS)
+
+This package contains the Kotlin/JS compiled output for `sharedLogic`.
+
+Usage:
+
+\`\`\`js
+import * as Calc from "@cyntra/calculation-engine/kotlin/CalculationEngine-sharedLogic.mjs";
+// or import the exposed function if your bundler resolves ESM exports
+// named export: refreshCalculationJs
+\`\`\`
+' > sharedLogic/npm-package/README.md
+```

@@ -1,3 +1,3 @@
 type Nullable<T> = T | null | undefined
 declare function KtSingleton<T>(): T & (abstract new() => any);
-export declare function refreshCalculationJs(orderJson: string, resetDiscount?: boolean, cashDiscount?: number, surcharge?: number, selectedPaymentType?: string, isRoundOffEnabled?: boolean, roundOffType?: string, applicableRoundOffPaymentTypes?: Array<string>, isRefundingOrder?: boolean, isTaxIncluded?: boolean): string;
+export declare function refreshCalculationJs(orderJson: string, resetDiscount?: boolean, cashDiscount?: number, surcharge?: number, selectedPaymentType?: string, isRoundOffEnabled?: boolean, roundOffType?: string, applicableRoundOffPaymentTypes?: any/* ArrayList<string> */, isRefundingOrder?: boolean, isTaxIncluded?: boolean): string;
