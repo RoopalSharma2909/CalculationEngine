@@ -206,7 +206,42 @@ internal data class OrderPlaceRequest(
 
     @SerialName("taxable_amount")
     var taxableAmount: Double? = null,
+
+    @SerialName("order_audit_logs")
+    var orderAuditLogs: ArrayList<OrderAuditLog>? = ArrayList(),
 )
+
+@Serializable
+data class AuditTrailRequest(
+    val order_audit_logs: List<OrderAuditLog>,
+    val order_id: String?,
+    val store_details: StoreDetails,
+    @SerialName("emp_no") val empNo: String = "",
+    @SerialName("device_id")
+    val deviceId: String? = null,
+)
+
+@Serializable
+data class OrderAuditLog(
+    val status: String,
+    val activity_type: String,
+    val amount_impact: Double,
+    val approval_required: Boolean,
+    val approved_by: String,
+    val current: String,
+    val previous: String,
+    val reason: String,
+    @SerialName("quantity") var quantity: Int? = null,
+    @SerialName("item_name") val itemName: String?=null,
+    @SerialName("sku") val sku: String? = null,
+    @SerialName("item_seq") var itemSeq: Int? = null,
+)
+
+@Serializable
+data class StoreDetails(
+    val store_id: String
+)
+
 
 @Serializable
 internal data class OrderScheduled(
