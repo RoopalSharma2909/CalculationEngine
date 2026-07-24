@@ -340,8 +340,8 @@ class JsonObject extends JsonElement {
     var tmp = this.g17_1.m2();
     return joinToString(tmp, ',', '{', '}', VOID, VOID, JsonObject$toString$lambda);
   }
-  d1() {
-    return this.g17_1.d1();
+  e1() {
+    return this.g17_1.e1();
   }
   h17(key) {
     return this.g17_1.h2(key);
@@ -461,8 +461,8 @@ class JsonArray extends JsonElement {
   toString() {
     return joinToString(this.p17_1, ',', '[', ']');
   }
-  d1() {
-    return this.p17_1.d1();
+  e1() {
+    return this.p17_1.e1();
   }
   q17(element) {
     return this.p17_1.d2(element);
@@ -3086,7 +3086,7 @@ class AbstractJsonLexer {
   }
   m1d(allowLenientStrings) {
     // Inline function 'kotlin.collections.mutableListOf' call
-    var tokenStack = ArrayList.e1();
+    var tokenStack = ArrayList.d1();
     var lastToken = this.t1b();
     if (!(lastToken === 8) && !(lastToken === 6)) {
       this.w1b();
@@ -3866,7 +3866,7 @@ function ignoreUnknownKeys(_this__u8e3s4, json) {
       // Inline function 'kotlin.collections.any' call
       var tmp_0;
       if (isInterface(tmp0, Collection)) {
-        tmp_0 = tmp0.d1();
+        tmp_0 = tmp0.e1();
       } else {
         tmp_0 = false;
       }
@@ -3951,7 +3951,7 @@ function buildDeserializationNamesMap(_this__u8e3s4, json) {
       // Inline function 'kotlin.collections.filterIsInstance' call
       var tmp0 = _this__u8e3s4.gn(i);
       // Inline function 'kotlin.collections.filterIsInstanceTo' call
-      var destination = ArrayList.e1();
+      var destination = ArrayList.d1();
       var _iterator__ex2g4s = tmp0.v();
       while (_iterator__ex2g4s.w()) {
         var element = _iterator__ex2g4s.x();
@@ -4002,7 +4002,7 @@ function buildDeserializationNamesMap(_this__u8e3s4, json) {
      while (inductionVariable < last);
   // Inline function 'kotlin.collections.ifEmpty' call
   var tmp_1;
-  if (builder.d1()) {
+  if (builder.e1()) {
     tmp_1 = emptyMap();
   } else {
     tmp_1 = builder;
@@ -4154,7 +4154,7 @@ function readArray($this) {
     $this.o1b_1.a1a('Unexpected leading comma');
   }
   // Inline function 'kotlin.collections.arrayListOf' call
-  var result = ArrayList.e1();
+  var result = ArrayList.d1();
   while ($this.o1b_1.u1b()) {
     var element = $this.x1b();
     result.f(element);

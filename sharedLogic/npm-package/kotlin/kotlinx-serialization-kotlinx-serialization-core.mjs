@@ -424,11 +424,11 @@ class ClassSerialDescriptorBuilder {
     this.dl_1 = serialName;
     this.el_1 = false;
     this.fl_1 = emptyList();
-    this.gl_1 = ArrayList.e1();
+    this.gl_1 = ArrayList.d1();
     this.hl_1 = HashSet.i8();
-    this.il_1 = ArrayList.e1();
-    this.jl_1 = ArrayList.e1();
-    this.kl_1 = ArrayList.e1();
+    this.il_1 = ArrayList.d1();
+    this.jl_1 = ArrayList.d1();
+    this.kl_1 = ArrayList.d1();
   }
   pn(elementName, descriptor, annotations, isOptional) {
     // Inline function 'kotlin.require' call
@@ -1308,7 +1308,7 @@ class ArrayListSerializer extends CollectionSerializer {
   }
   sr() {
     // Inline function 'kotlin.collections.arrayListOf' call
-    return ArrayList.e1();
+    return ArrayList.d1();
   }
   tr(_this__u8e3s4) {
     return _this__u8e3s4.a1();
@@ -1645,7 +1645,7 @@ class ReferenceArraySerializer extends CollectionLikeSerializer {
   }
   sr() {
     // Inline function 'kotlin.collections.arrayListOf' call
-    return ArrayList.e1();
+    return ArrayList.d1();
   }
   zt(_this__u8e3s4) {
     return _this__u8e3s4.a1();
@@ -3394,7 +3394,7 @@ class TaggedDecoder {
   constructor() {
     var tmp = this;
     // Inline function 'kotlin.collections.arrayListOf' call
-    tmp.g12_1 = ArrayList.e1();
+    tmp.g12_1 = ArrayList.d1();
     this.h12_1 = false;
   }
   hp() {
@@ -3571,7 +3571,7 @@ class NamedValueDecoder extends TaggedDecoder {
     return tmp;
   }
   k12() {
-    return this.g12_1.d1() ? '$' : joinToString(this.g12_1, '.', '$.');
+    return this.g12_1.e1() ? '$' : joinToString(this.g12_1, '.', '$.');
   }
 }
 class MapEntry {
@@ -4184,7 +4184,7 @@ function serializerByKTypeImpl(_this__u8e3s4, type, failOnMissingTypeArgSerializ
   }
   var typeArguments = destination;
   var tmp;
-  if (typeArguments.d1()) {
+  if (typeArguments.e1()) {
     var tmp_0;
     if (isInterface_0(rootClass) && !(_this__u8e3s4.rm(rootClass) == null)) {
       tmp_0 = null;
@@ -4214,7 +4214,7 @@ function serializerByKTypeImpl(_this__u8e3s4, type, failOnMissingTypeArgSerializ
   if (!(cachedSerializer == null))
     return cachedSerializer;
   var tmp_4;
-  if (typeArguments.d1()) {
+  if (typeArguments.e1()) {
     var tmp0_elvis_lhs = serializerOrNull(rootClass);
     var tmp1_elvis_lhs = tmp0_elvis_lhs == null ? _this__u8e3s4.rm(rootClass) : tmp0_elvis_lhs;
     var tmp_5;
@@ -4890,7 +4890,7 @@ function compactArray(_this__u8e3s4) {
   // Inline function 'kotlin.takeUnless' call
   var tmp;
   // Inline function 'kotlin.collections.isNullOrEmpty' call
-  if (!(_this__u8e3s4 == null || _this__u8e3s4.d1())) {
+  if (!(_this__u8e3s4 == null || _this__u8e3s4.e1())) {
     tmp = _this__u8e3s4;
   } else {
     tmp = null;
@@ -4922,7 +4922,7 @@ function _init_properties_Platform_common_kt__3qzecs() {
 }
 function throwArrayMissingFieldException(seenArray, goldenMaskArray, descriptor) {
   // Inline function 'kotlin.collections.mutableListOf' call
-  var missingFields = ArrayList.e1();
+  var missingFields = ArrayList.d1();
   var inductionVariable = 0;
   var last = goldenMaskArray.length - 1 | 0;
   if (inductionVariable <= last)
@@ -4951,7 +4951,7 @@ function throwArrayMissingFieldException(seenArray, goldenMaskArray, descriptor)
 }
 function throwMissingFieldException(seen, goldenMask, descriptor) {
   // Inline function 'kotlin.collections.mutableListOf' call
-  var missingFields = ArrayList.e1();
+  var missingFields = ArrayList.d1();
   var missingFieldsBits = goldenMask & ~seen;
   var inductionVariable = 0;
   if (inductionVariable < 32)
