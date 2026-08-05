@@ -1,6 +1,5 @@
-package com.cravrr.calculationengine
+package com.cravrr.calculationengine.model
 
-import com.cravrr.calculationengine.model.ItemDetailsList
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

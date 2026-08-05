@@ -1,17 +1,11 @@
-package com.cravrr.calculationengine
+package com.cravrr.calculationengine.calculation
 
-import com.cravrr.calculationengine.expects.formatDoublePrice
+import com.cravrr.calculationengine.calculation.expects.formatDoublePrice
+import com.cravrr.calculationengine.model.ChargesData
 import com.cravrr.calculationengine.model.ItemDetailsList
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlin.collections.plusAssign
+import com.cravrr.calculationengine.model.OrderDiscount
+import com.cravrr.calculationengine.model.OrderPlaceRequest
+import com.cravrr.calculationengine.model.Tax
 import kotlin.math.absoluteValue
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -20,7 +14,7 @@ import kotlin.math.round
 const val CARD_SURCHARGE = "Card Surcharge"
 const val CASH_DISCOUNT = "Cash Discount"
 
-internal class OrderCalculationService() {
+internal class OrderCalculationService {
     private val itemPriceCalculator = ItemPriceCalculator()
 
     private fun calculateTotalPriceOfSelectedCombos(combos: MutableList<ItemDetailsList>?): Double {

@@ -1,8 +1,10 @@
-package com.cravrr.calculationengine
+package com.cravrr.calculationengine.calculation
 
-import com.cravrr.calculationengine.expects.formatDoublePrice
+import com.cravrr.calculationengine.calculation.expects.formatDoublePrice
 import com.cravrr.calculationengine.model.ItemDetailsList
+import com.cravrr.calculationengine.model.OrderPlaceRequest
 import com.cravrr.calculationengine.model.SelectedAddonsItems
+import com.cravrr.calculationengine.model.Tax
 
 
 internal class ItemPriceCalculator {
@@ -10,7 +12,6 @@ internal class ItemPriceCalculator {
     private fun calculateTotalPriceOfAddons(addons: MutableList<SelectedAddonsItems>?): Double {
         return addons?.sumOf { it.subTotal } ?: 0.0
     }
-
 
     private fun calculateTotalPriceOfSelectedCombos(combos: MutableList<ItemDetailsList>?): Double {
         return combos?.sumOf { comboItem ->

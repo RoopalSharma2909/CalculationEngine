@@ -1,4 +1,4 @@
-package com.cravrr.calculationengine.expects
+package com.cravrr.calculationengine.calculation.expects
 
 import kotlin.math.floor
 import kotlin.math.pow

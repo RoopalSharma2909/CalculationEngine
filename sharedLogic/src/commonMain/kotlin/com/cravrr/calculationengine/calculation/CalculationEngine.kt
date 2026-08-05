@@ -1,4 +1,4 @@
-package com.cravrr.calculationengine
+package com.cravrr.calculationengine.calculation
 
 interface CalculationEngine {
 

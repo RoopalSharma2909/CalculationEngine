@@ -1,5 +1,6 @@
-package com.cravrr.calculationengine
+package com.cravrr.calculationengine.calculation
 
+import com.cravrr.calculationengine.model.OrderPlaceRequest
 import kotlinx.serialization.json.Json
 
 internal class CalculationEngineImpl(

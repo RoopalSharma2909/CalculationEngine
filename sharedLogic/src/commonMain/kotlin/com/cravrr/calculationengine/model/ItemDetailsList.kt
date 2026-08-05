@@ -1,9 +1,5 @@
 package com.cravrr.calculationengine.model
 
-import com.cravrr.calculationengine.ChargesData
-import com.cravrr.calculationengine.ItemPriceCalculator
-import com.cravrr.calculationengine.OrderPlaceRequest
-import com.cravrr.calculationengine.Tax
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
