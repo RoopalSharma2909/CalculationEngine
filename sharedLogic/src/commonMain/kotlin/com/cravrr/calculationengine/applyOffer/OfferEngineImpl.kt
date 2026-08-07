@@ -1,5 +1,6 @@
 package com.cravrr.calculationengine.applyOffer
 
+import com.cravrr.calculationengine.calculation.expects.formatDoublePrice
 import com.cravrr.calculationengine.model.ChargesData
 import com.cravrr.calculationengine.model.OrderDiscount
 import com.cravrr.calculationengine.model.OrderOfferHeader
@@ -669,9 +670,9 @@ internal class OfferEngineImpl(
                 key.copy(
                     quantity = groupedItems.sumOf { it.quantity },
                     appliedDiscount = key.appliedDiscount?.copy(
-                        value = groupedItems.sumOf {
+                        value = formatDoublePrice(groupedItems.sumOf {
                             it.appliedDiscount?.value ?: 0.0
-                        }
+                        })
                     )
                 )
             }

@@ -55,7 +55,7 @@ internal class ItemPriceCalculator {
                 if (calculatedItem.discountPercent > 0.0) {
                     calculatedItem.totalGrossSale * (calculatedItem.discountPercent / 100)
                 } else if (calculatedItem.discountAmount > 0.0) {
-                    calculatedItem.discountAmount
+                    calculatedItem.discountAmount * calculatedItem.quantity
                 } else {
                     0.0
                 }
