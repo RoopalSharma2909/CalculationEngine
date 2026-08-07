@@ -9,7 +9,7 @@ plugins {
 
 
 group = "com.cyntra"
-version = "1.0.32"
+version = "1.0.35"
 
 kotlin {
     listOf(

@@ -470,9 +470,10 @@ internal class OfferEngineImpl(
         }
         if (matchingOffer == null) {
             onCompleted(orderJson, false)
+            return
         }
         val matchingOfferJson = json.encodeToString(matchingOffer)
-        return if (isOfferValidOnCart(matchingOfferJson, orderJson)) {
+        if (isOfferValidOnCart(matchingOfferJson, orderJson)) {
             applyOrderLevelOffer(
                 matchingOfferJson,
                 orderJson,
