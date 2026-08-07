@@ -64,7 +64,7 @@ suspend fun applyCouponCodeOfferJs(
     isTaxIncluded: Boolean,
     couponCode: String,
     onCompleted: (String, Boolean) -> Unit
-): Boolean {
+) {
     val engine = OfferEngineImpl()
     return engine.applyCouponCodeOffer(
         orderJson,

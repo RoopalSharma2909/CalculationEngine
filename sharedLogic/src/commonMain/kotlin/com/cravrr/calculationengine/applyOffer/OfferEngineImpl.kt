@@ -9,12 +9,21 @@ import com.cravrr.calculationengine.model.ItemLite
 import com.cravrr.calculationengine.model.OfferData
 import com.cravrr.calculationengine.model.OfferTerm
 import com.cravrr.calculationengine.model.OfferTermProduct
+import com.cravrr.calculationengine.model.TimeFrame
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
 import kotlin.collections.get
 import kotlin.math.ceil
@@ -142,6 +151,7 @@ internal class OfferEngineImpl(
     override suspend fun isOfferValidOnCart(offerJson: String, orderJson: String): Boolean {
         val order = json.decodeFromString<OrderPlaceRequest>(orderJson)
         val offer = json.decodeFromString<OfferData>(offerJson)
+        if (!OfferSchedulerUtil.isOfferActiveNow(offer)) return false
         if (offer.offerTerm.isEmpty()) return false
         val term = offer.offerTerm[0]
         val termStyle = offer.offerHeader.termStyle
@@ -388,8 +398,8 @@ internal class OfferEngineImpl(
         mapItemLevelOffers(listOf(offer), order)
         if (offer.offerTerm.size > 1) {
             val offerListJson = json.encodeToString(listOf(offer))
-            applyItemLevelOffer(offerListJson, orderJson, isTaxIncluded, onCompleted = {
-                onCompleted(json.encodeToString(it), true)
+            autoApply(offerListJson, orderJson, isTaxIncluded, onCompleted = {
+                onCompleted(it, true)
             })
         } else {
             order.itemDetails.forEach {
@@ -452,14 +462,14 @@ internal class OfferEngineImpl(
         isTaxIncluded: Boolean,
         couponCode: String,
         onCompleted: (String, Boolean) -> Unit
-    ): Boolean {
+    ) {
         val offers = json.decodeFromString<List<OfferData>>(offerListJson)
         val matchingOffer = offers.find { offer ->
             offer.offerTerm.isNotEmpty() &&
                     offer.offerTerm[0].couponCode == couponCode
         }
         if (matchingOffer == null) {
-            return false
+            onCompleted(orderJson, false)
         }
         val matchingOfferJson = json.encodeToString(matchingOffer)
         return if (isOfferValidOnCart(matchingOfferJson, orderJson)) {
@@ -470,9 +480,8 @@ internal class OfferEngineImpl(
                 onCompleted = { order, bool ->
                     onCompleted(order, bool)
                 })
-            true
         } else {
-            false
+            onCompleted(orderJson, false)
         }
     }
 
@@ -483,7 +492,39 @@ internal class OfferEngineImpl(
         onCompleted: (String) -> Unit,
     ) {
         val order = json.decodeFromString<OrderPlaceRequest>(orderJson)
+        val offerList = json.decodeFromString<List<OfferData>>(offerListJson)
+        val appliedCouponOfferIds = order.itemDetails
+            .mapNotNull { it.appliedDiscount?.offerDetails }
+            .filter {
+                !it.couponCode.isNullOrEmpty()
+            }
+            .map { it.offerId }
+            .distinct()
+
+        val offers = if (appliedCouponOfferIds.isNotEmpty()) {
+            offerList.filter { offer ->
+                offer.offerId in appliedCouponOfferIds && OfferSchedulerUtil.isOfferActiveNow(offer)
+            }
+        } else {
+            offerList.filter { offer ->
+                (offer.offerHeader.termStyle == TermStyle.C3.name || offer.offerHeader.termStyle == TermStyle.C1.name) && offer.offerTerm[0].couponCode.isNullOrEmpty() && OfferSchedulerUtil.isOfferActiveNow(
+                    offer
+                )
+            }
+        }
+
+        autoApply(json.encodeToString(offers), orderJson, isTaxIncluded, onCompleted)
+    }
+
+    suspend fun autoApply(
+        offerListJson: String,
+        orderJson: String,
+        isTaxIncluded: Boolean,
+        onCompleted: (String) -> Unit,
+    ) {
+        val order = json.decodeFromString<OrderPlaceRequest>(orderJson)
         val offers = json.decodeFromString<List<OfferData>>(offerListJson)
+
         if (order.appliedDiscount?.none { it.title == "Order Level Discount" || it.title == "Complimentary Discount" } == true) {
             clearMappedData()
             mapItemLevelOffers(offers, order)
@@ -1446,3 +1487,96 @@ private fun getOfferTermProducts(offer: OfferData, term: OfferTerm?): List<Offer
     return term?.let { offer.offerTermProduct.filter { it.offerTermId == term.offerTermId } }
         ?: emptyList()
 }
+
+object OfferSchedulerUtil {
+
+    fun isOfferActiveNow(offer: OfferData): Boolean {
+        if (!isWithinDateRange(offer)) return false
+
+        val scheduler = offer.offerScheduler
+        if (scheduler.days.isEmpty()) return true
+
+        val currentDay = getCurrentDayAbbreviation()
+        val currentMinutes = getCurrentTimeInMinutes()
+
+        return if (scheduler.isAllDays) {
+            val daySchedule = scheduler.days.find { it.day == currentDay }
+            daySchedule?.let { isTimeInAnyFrame(currentMinutes, it.timeFrame) } ?: true
+        } else {
+            val daySchedule = scheduler.days.find { it.day == currentDay }
+            daySchedule?.let { isTimeInAnyFrame(currentMinutes, it.timeFrame) } ?: false
+        }
+    }
+
+    private val timeZone = TimeZone.currentSystemDefault()
+
+    private fun isWithinDateRange(offer: OfferData): Boolean {
+        return try {
+            val today = Clock.System.now()
+                .toLocalDateTime(timeZone)
+                .date
+
+            val startDate = parseIsoDate(offer.offerHeader.effectiveDate)
+            val endDate = parseIsoDate(offer.offerHeader.endDate)
+
+            today >= startDate && today <= endDate
+        } catch (e: Exception) {
+            true
+        }
+    }
+
+    private fun parseIsoDate(dateStr: String): LocalDate {
+        return Instant.parse(dateStr)
+            .toLocalDateTime(timeZone)
+            .date
+    }
+
+    private fun getCurrentTimeInMinutes(): Int {
+        val now = Clock.System.now()
+            .toLocalDateTime(timeZone)
+
+        return now.hour * 60 + now.minute
+    }
+
+    private fun getCurrentDayAbbreviation(): String {
+        return when (Clock.System.now().toLocalDateTime(timeZone).dayOfWeek) {
+            DayOfWeek.MONDAY -> "Mon"
+            DayOfWeek.TUESDAY -> "Tue"
+            DayOfWeek.WEDNESDAY -> "Wed"
+            DayOfWeek.THURSDAY -> "Thu"
+            DayOfWeek.FRIDAY -> "Fri"
+            DayOfWeek.SATURDAY -> "Sat"
+            DayOfWeek.SUNDAY -> "Sun"
+            else -> {
+                ""
+            }
+        }
+    }
+
+    private fun parseTimeToMinutes(time: String): Int {
+        val parts = time.split(":")
+        return parts[0].toInt() * 60 + parts[1].toInt()
+    }
+
+
+    private fun isTimeInAnyFrame(currentMinutes: Int, timeFrames: List<TimeFrame>): Boolean {
+        if (timeFrames.isEmpty()) return true
+        return timeFrames.any { frame ->
+            try {
+                val start = parseTimeToMinutes(frame.startTime)
+                val end = parseTimeToMinutes(frame.endTime)
+                when {
+                    // Full day: 00:00 to 23:59
+                    start == 0 && end == 1439 -> true
+                    // Overnight e.g. 22:00–02:00
+                    end < start -> currentMinutes >= start || currentMinutes <= end
+                    // Normal range
+                    else -> currentMinutes >= start && currentMinutes <= end
+                }
+            } catch (e: Exception) {
+                true
+            }
+        }
+    }
+}
+

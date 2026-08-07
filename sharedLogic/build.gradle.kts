@@ -9,7 +9,7 @@ plugins {
 
 
 group = "com.cyntra"
-version = "1.0.27"
+version = "1.0.32"
 
 kotlin {
     listOf(
@@ -67,6 +67,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

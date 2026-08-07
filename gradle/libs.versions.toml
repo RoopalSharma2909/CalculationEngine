@@ -19,6 +19,7 @@ material3 = "1.11.0-alpha07"
 kotlinxCoroutinesAndroid = "1.10.2"
 roomDB = "2.7.2"
 sqlite = "2.5.2"
+kotlinxDatetime = "0.6.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -45,7 +46,7 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomDB" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomDB" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
-
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }

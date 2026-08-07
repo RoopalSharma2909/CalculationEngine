@@ -24,7 +24,7 @@ interface OfferEngine {
         isTaxIncluded: Boolean,
         couponCode: String,
         onCompleted: (String, Boolean) -> Unit
-    ): Boolean
+    )
 
     companion object {
         fun create(): OfferEngine = OfferEngineImpl()
