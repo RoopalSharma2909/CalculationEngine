@@ -50,9 +50,6 @@ Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-mu
 
 then copy and create readme
 ```
-./gradlew :sharedLogic:jsNodeProductionLibraryDistribution --no-daemon --stacktrace
-
-
 mkdir -p sharedLogic/npm-package && cp -R "sharedLogic/build/compileSync/js/main/productionLibrary/kotlin" sharedLogic/npm-package/ && printf '%s' '{
   "name": "@cyntra/calculation-engine",
   "version": "1.0.2",
