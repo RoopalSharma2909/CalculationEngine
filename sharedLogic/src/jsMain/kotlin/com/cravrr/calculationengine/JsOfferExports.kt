@@ -43,7 +43,7 @@ fun applyCouponCodeOfferJs(
     isTaxIncluded: Boolean,
     couponCode: String,
     onCompleted: (String, Boolean) -> Unit
-): Promise<Boolean> = offerScope.promise {
+): Promise<Unit> = offerScope.promise {
     OfferEngineImpl().applyCouponCodeOffer(
         orderJson,
         offerListJson,
